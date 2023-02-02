@@ -50,15 +50,8 @@ def create_dict(file:list[str],num_de_estados:int)-> dict[str : list[str]]:
         sentece:str = eliminar_signos(line)
         dict_frases[sentece.strip()]=j   # generando diccionario de frases
         words:list[str] = sentece.rsplit()
-        for i, palabra in enumerate(words):
-            if i == 0:
-                dict_words = introducir_clave_valor(("START", "START"), palabra, dict_words)
-                continue
-            elif i == 1:
-                dict_words = introducir_clave_valor(("START", words[0]), palabra, dict_words)
-                continue
-            dict_words = introducir_clave_valor((words[i - 2], words[i - 1]), palabra, dict_words)
-        lalalal
+        
+
     return dict_words,dict_frases      # DEVUELVE EL DICCIONARIO DE ESTADOS  CON LA LISTA DE PALABRAS Y ****UN DICCIONARIO CON LAS FRASES
 
 def read_file(ruta: str) -> list[str]:
@@ -72,20 +65,19 @@ def read_file(ruta: str) -> list[str]:
         return lines
 
 if __name__ == "__main__":
-    # #1 - Pedir numero de frases:
-    # numero_de_veces:int = int(input("Cuantas frases quieres: "))
-    # print() 
-    # #1.1 - Pedir estados:
-    # numero_de_estados: int = int(input("Cuantos estados desea analizar: "))
-    # print()
+    #1 - Pedir numero de frases:
+    numero_de_veces:int = int(input("Cuantas frases quieres: "))
+    print() 
+    #1.1 - Pedir estados:
+    numero_de_estados: int = int(input("Cuantos estados desea analizar: "))
+    print()
 
-    # #2 - Leer archivo
-    # file = read_file(r"/home/marcos/Downloads/prueba.txt")
+    #2 - Leer archivo
+    file = read_file(r"/home/marcos/Downloads/prueba.txt")
 
-    # #3 - Genero diccionario con las frases de mi archivo y otro diccionario con los {stados:[words]}
-    # dict_words,dict_frases = create_dict(file,numero_de_estados)
+    #3 - Genero diccionario con las frases de mi archivo y otro diccionario con los {stados:[words]}
+    dict_words,dict_frases = create_dict(file,numero_de_estados)
 
-    # #4 - Genero cadenas
-    # markov_generate_sentences(dict_words, dict_frases, numero_de_veces)
+    #4 - Genero cadenas
+    markov_generate_sentences(dict_words, dict_frases, numero_de_veces)
     
-    print (state_generator())
