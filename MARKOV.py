@@ -39,19 +39,24 @@ def eliminar_signos(line: str):
 
 def state_generator(num_de_estados:int=2)-> tuple: 
     state = ["START" for i in range(num_de_estados)]
+    return tuple(state)
+def update_state (state:list[str],word:str):
+    state=state[1:]
+    state = state + (word,)
     return state
 
-def create_dict(file:list[str],num_de_estados:int)-> dict[str : list[str]]:
-    state=state_generator(num_de_estados) # TEDRIA Q AGIGNAR EL ESTADO
-
+def create_dict(file:list[str],state_generated:tuple)-> dict[str : list[str]]:
+    state= state_generated
     dict_words:dict[str : list[str]] = {}
     dict_frases:dict[str : int] = {}
     for j,line in enumerate (file) :
         sentece:str = eliminar_signos(line)
         dict_frases[sentece.strip()]=j   # generando diccionario de frases
-        words:list[str] = sentece.rsplit()
-        
-
+        list_words:list[str] = sentece.rsplit()
+        for word in list_words:
+            dict_words = introducir_clave_valor(state,word,dict_words) 
+            state= update_state(state,word)
+        state = state_generated
     return dict_words,dict_frases      # DEVUELVE EL DICCIONARIO DE ESTADOS  CON LA LISTA DE PALABRAS Y ****UN DICCIONARIO CON LAS FRASES
 
 def read_file(ruta: str) -> list[str]:
@@ -72,12 +77,15 @@ if __name__ == "__main__":
     numero_de_estados: int = int(input("Cuantos estados desea analizar: "))
     print()
 
-    #2 - Leer archivo
+    #Generar estado:
+    state_generated = state_generator(numero_de_estados)
+
+    #3 - Leer archivo
     file = read_file(r"/home/marcos/Downloads/prueba.txt")
 
-    #3 - Genero diccionario con las frases de mi archivo y otro diccionario con los {stados:[words]}
-    dict_words,dict_frases = create_dict(file,numero_de_estados)
-
-    #4 - Genero cadenas
+    #4 - Genero diccionario con las frases de mi archivo y otro diccionario con los {stados:[words]}
+    dict_words,dict_frases = create_dict(file,state_generated)
+    
+    #5 - Genero cadenas
     markov_generate_sentences(dict_words, dict_frases, numero_de_veces)
     
