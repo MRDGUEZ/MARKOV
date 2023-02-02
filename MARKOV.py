@@ -58,6 +58,7 @@ def create_dict(file:list[str],num_de_estados:int)-> dict[str : list[str]]:
                 dict_words = introducir_clave_valor(("START", words[0]), palabra, dict_words)
                 continue
             dict_words = introducir_clave_valor((words[i - 2], words[i - 1]), palabra, dict_words)
+        lalalal
     return dict_words,dict_frases      # DEVUELVE EL DICCIONARIO DE ESTADOS  CON LA LISTA DE PALABRAS Y ****UN DICCIONARIO CON LAS FRASES
 
 def read_file(ruta: str) -> list[str]:
