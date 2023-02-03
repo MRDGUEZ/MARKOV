@@ -1,5 +1,5 @@
 import random
-
+#hola
 def markov_generate_sentences(dict_words: dict[tuple : list[str]],dict_sentences: dict[str: int] ,number_of_sentences: int,generated_state:tuple)->None:
     phrases_made={}
     phrase = list()
