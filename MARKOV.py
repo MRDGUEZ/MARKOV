@@ -1,9 +1,9 @@
 import random
 
-def markov_generate_sentences(dict_words: dict[str : list[str]],dict_frases: dict[str: int] ,num_frases: int,state_generated:tuple):
+def markov_generate_sentences(dict_words: dict[str : list[str]],dict_frases: dict[str: int] ,num_frases: int,generated_state:tuple):
     frases_hechas={}
     frase = list()
-    state = state_generated
+    state = generated_state
     count = 1
     attemps = 0
     while count < num_frases+1 and attemps < 300 :
@@ -17,11 +17,11 @@ def markov_generate_sentences(dict_words: dict[str : list[str]],dict_frases: dic
                 print(f"{count}- "+ frase_complete,'\n')
                 frases_hechas[frase_complete]=count
                 frase.clear()
-                state=state_generated
+                state=generated_state
                 count += 1
             else : 
                 frase.clear()
-                state = state_generated
+                state = generated_state
                 attemps +=1
 
 def introducir_clave_valor(anteriores: tuple, siguiente: str, dict_words: dict[str : list[str]]) -> dict[str : list[str]]:
@@ -34,19 +34,20 @@ def introducir_clave_valor(anteriores: tuple, siguiente: str, dict_words: dict[s
 def eliminar_signos(line: str):
     separators = [",", ";", ":", ".", "-","?","!","/","\\","[","]","{","}",'\n']
     for sep in separators:
-        line= line.replace(sep, " ")
+        line= line.replace(sep, "")
     return line.lower()
 
 def state_generator(num_de_estados:int=2)-> tuple: 
     state = ["START" for i in range(num_de_estados)]
     return tuple(state)
+
 def update_state (state:tuple[str],word:str):
     state=state[1:]
     state = state + (word,)
     return state
 
-def create_dict(file:list[str],state_generated:tuple)-> dict[str : list[str]]:
-    state= state_generated
+def create_dict(file:list[str],generated_state:tuple)-> tuple[dict,dict]:
+    state= generated_state
     dict_words:dict[str : list[str]] = {}
     dict_frases:dict[str : int] = {}
     for j,line in enumerate (file) :
@@ -56,14 +57,14 @@ def create_dict(file:list[str],state_generated:tuple)-> dict[str : list[str]]:
         for word in list_words:
             dict_words = introducir_clave_valor(state,word,dict_words) 
             state= update_state(state,word)
-        state = state_generated
+        state = generated_state
     return dict_words,dict_frases      # DEVUELVE EL DICCIONARIO DE ESTADOS  CON LA LISTA DE PALABRAS Y ****UN DICCIONARIO CON LAS FRASES
 
-def read_file(ruta: str) -> list[str]:
+def read_file(path: str) -> list[str]:
     try:
-        file:object= open(rf"{ruta}", "r")
+        file:object= open(rf"{path}", "r")
     except:
-        print("Upps!!, ha habido un problema")
+        print("Upps!!, There has been a problem")
     else:
         lines = file.readlines()
         file.close()
@@ -71,20 +72,20 @@ def read_file(ruta: str) -> list[str]:
 
 if __name__ == "__main__":
     #1 - Pedir numero de frases:
-    numero_de_veces:int = int(input("Cuantas frases quieres: "))
+    number_of_sentences:int = int(input("Cuantas frases quieres: "))
     print() 
     #1.1 - Pedir estados:
-    numero_de_estados: int = int(input("Cuantos estados desea analizar: "))
+    number_of_states: int = int(input("Cuantos estados desea analizar: "))
     print()
 
     #Generar estado:
-    state_generated:tuple = state_generator(numero_de_estados)
+    generated_state:tuple = state_generator(number_of_states)
 
     #3 - Leer archivo
     file:list = read_file(r"/home/marcos/Downloads/prueba.txt")
 
     #4 - Genero diccionario con las frases de mi archivo y otro diccionario con los {stados:[words]}
-    dict_words,dict_frases:tuple(dict,dict) = create_dict(file,state_generated)
+    dict_words,dict_frases = create_dict(file,generated_state)
     
     #5 - Genero cadenas
-    markov_generate_sentences(dict_words, dict_frases, numero_de_veces,state_generated)
+    markov_generate_sentences(dict_words, dict_frases, number_of_sentences,generated_state)
