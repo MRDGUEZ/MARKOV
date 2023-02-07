@@ -40,7 +40,7 @@ One for the states and the words that precede them  ``` dict_words:dict[tuple : 
 
 The second where the original phrases of the document are stored without punctuation marks ```dict_sentences : dict[str : int]  ```
 
-ANd finally a dictionary with the phrases that I have made ``` phrases_made : dict[str : int]  ```
+And finally a dictionary with the phrases that I have made ``` phrases_made : dict[str : int]  ```
 
 ### To update and create states :
 
