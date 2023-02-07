@@ -35,8 +35,11 @@ In this case we use markov chain to generate phrases that there are not exist .
 We use the variable 'count' to know how many phrases we have generated and the variable 'attempts' to limit the number of attempts to find new requested phrases
 
 We have three dictionaries:
+
 One for the states and the words that precede them  ``` dict_words:dict[tuple : list[str]]```
+
 The second where the original phrases of the document are stored without punctuation marks ```dict_sentences : dict[str : int]  ```
+
 ANd finally a dictionary with the phrases that I have made ``` phrases_made : dict[str : int]  ```
 
 ### To update and create states :
