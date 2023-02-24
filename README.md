@@ -8,7 +8,7 @@ In this case we use markov chain to generate phrases that there are not exist .
 
 ## Generate sentences:
 ```Python
-    def markov_generate_sentences(dict_words: dict[tuple : list[str]],dict_sentences: dict[str: int] ,number_of_sentences: int,generated_state:tuple)->None:
+def markov_generate_sentences(dict_words: dict[tuple : list[str]],dict_sentences: dict[str: int] ,number_of_sentences: int,generated_state:tuple)->None:
     phrases_made={}
     phrase = list()
     state = generated_state
@@ -47,49 +47,48 @@ And finally a dictionary with the phrases that I have made ``` phrases_made : di
 I used tuples to get the result
 
 ```python
-    def state_generator(num_de_estados:int=2)-> tuple: 
-        return ("START",) * num_de_estados
+def state_generator(num_de_estados:int=2)-> tuple: 
+    return ("START",) * num_de_estados
 
-    def update_state (state:tuple[str],word:str)->tuple:
-        return state[1:]+(word,)
+def update_state (state:tuple[str],word:str)->tuple:
+    return state[1:]+(word,)
 ```
 ### To add values to the dictionary and remove punctuation marks:
 
 ```python
-    def enter_values_into_dict(state: tuple, word: str, dict_words: dict[tuple : list[str]]) -> dict[tuple: list[str]]:
-        dict_words.setdefault(state,[]).append(word)
-        return dict_words
+def enter_values_into_dict(state: tuple, word: str, dict_words: dict[tuple : list[str]]) -> dict[tuple: list[str]]:
+    dict_words.setdefault(state,[]).append(word)
+    return dict_words
 
-    def remove_signs(line: str)->str:
-        return line.translate(str.maketrans('','',string.punctuation)).lower().strip()
+def remove_signs(file : dict[int:str])->dict[str:int]:
+    for line in file.keys() :
+        file [line]=file[line].translate(str.maketrans('','',string.punctuation)).lower().strip()
+    return file
 ```
 
 ### To generate state and word dictionary and phrase dictionary:
 
 ```python
-    def create_dict(file:list[str],generated_state:tuple)-> tuple[dict,dict]:
-        state= generated_state
-        dict_words:dict[tuple : list[str]] = {('END',):[]}
-        dict_sentences:dict[str : int] = {}
-        for index,line in enumerate (file) :
-            if line.strip():
-                sentece:str = remove_signs(line)
-                dict_sentences[sentece]=index   # Generating word dictionary
-                list_words:list[str] = sentece.rsplit()
-                for word in list_words:
-                    dict_words = enter_values_into_dict(state,word,dict_words) 
-                    state= update_state(state,word)
-                dict_words[('END',)].append(state)
-                state = generated_state
-        return dict_words,dict_sentences      # Returns dictionary of states and dictionary of phrases as tuple
+def create_dict(file:dict[int:str],generated_state:tuple)-> tuple[dict,dict]:
+    state= generated_state
+    dict_words:dict[tuple : list[str]] = {('END',):[]}
+    for line in file.keys() :
+        if file[line].strip():
+            list_words:list[str] = file[line].rsplit()
+            for word in list_words:
+                dict_words = enter_values_into_dict(state,word,dict_words) 
+                state= update_state(state,word)
+            dict_words[('END',)].append(state)
+            state = generated_state
+    return dict_words      # Returns dictionary of states 
 ```
 ### And finally to read a file and return a list of phrases
 ```python
-    def read_file(path: str) -> list[str]:
-        try:
-            with open(rf"{path}", "r") as file:
-                lines = file.readlines()
-                return lines
-        except:
-            print("Upps!!, There has been a problem")
+def read_file(path: str) -> dict[int:str]:
+    try:
+        with open(rf"{path}", "r") as file:
+            lines ={ i:line for i,line in enumerate(file.readlines())}
+            return lines
+    except:
+        print("Upps!!, There has been a problem")
 ```
