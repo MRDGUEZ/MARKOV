@@ -25,42 +25,46 @@ def markov_generate_sentences(dict_words: dict[tuple : list[str]],dict_sentences
                 state = generated_state
                 attempts +=1
 
-def enter_values_into_dict(state: tuple, word: str, dict_words: dict[tuple : list[str]]) -> dict[tuple: list[str]]:
-    dict_words.setdefault(state,[]).append(word)
-    return dict_words
+def read_file(path: str) -> dict[int:str]:
+    try:
+        with open(rf"{path}", "r") as file:
+            lines ={ i:line for i,line in enumerate(file.readlines())}
+            return lines
+    except:
+        print("Upps!!, There has been a problem")
 
-def remove_signs(line: str)->str:
-    return line.translate(str.maketrans('','',string.punctuation)).lower().strip()
-   
+
+def remove_signs(file : dict[int:str])->dict[str:int]:
+    for line in file.keys() :
+        file [line]=file[line].translate(str.maketrans('','',string.punctuation)).lower().strip()
+    return file
+
+
 def state_generator(num_de_estados:int=2)-> tuple: 
     return ("START",) * num_de_estados
+
 
 def update_state (state:tuple[str],word:str)->tuple:
     return state[1:]+(word,)
 
-def create_dict(file:list[str],generated_state:tuple)-> tuple[dict,dict]:
+
+def enter_values_into_dict(state: tuple, word: str, dict_words: dict[tuple : list[str]]) -> dict[tuple: list[str]]:
+    dict_words.setdefault(state,[]).append(word)
+    return dict_words
+
+def create_dict(file:dict[int:str],generated_state:tuple)-> tuple[dict,dict]:
     state= generated_state
     dict_words:dict[tuple : list[str]] = {('END',):[]}
-    dict_sentences:dict[str : int] = {}
-    for index,line in enumerate (file) :
-        if line.strip():
-            sentece:str = remove_signs(line)
-            dict_sentences[sentece]=index   # Generating word dictionary
-            list_words:list[str] = sentece.rsplit()
+    for line in file.keys() :
+        if file[line].strip():
+            list_words:list[str] = file[line].rsplit()
             for word in list_words:
                 dict_words = enter_values_into_dict(state,word,dict_words) 
                 state= update_state(state,word)
             dict_words[('END',)].append(state)
             state = generated_state
-    return dict_words,dict_sentences      # Returns dictionary of states and dictionary of phrases as tuple
+    return dict_words      # Returns dictionary of states 
 
-def read_file(path: str) -> list[str]:
-    try:
-        with open(rf"{path}", "r") as file:
-            lines = file.readlines()
-            return lines
-    except:
-        print("Upps!!, There has been a problem")
 
 if __name__ == "__main__":
     #1 - Ask for number of sentences:
@@ -73,11 +77,12 @@ if __name__ == "__main__":
     #Generating state:
     generated_state:tuple = state_generator(number_of_states)
 
-    #3 - Read the file
-    file:list = read_file(r"ENTER YOUR PATH")
+    #3 - Read the file and remove signs
+    file:list = read_file(r"/home/marcos/Downloads/MARKOV/prueba.txt")
+    file = remove_signs(file)
 
     #4 - Generating diccionaries
-    dict_words,dict_sentences = create_dict(file,generated_state)
+    dict_words = create_dict(file,generated_state)
 
     # #5 - Generating chains
-    markov_generate_sentences(dict_words, dict_sentences, number_of_sentences,generated_state)
+    markov_generate_sentences(dict_words, file, number_of_sentences,generated_state)
