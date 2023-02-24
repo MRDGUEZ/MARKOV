@@ -28,6 +28,7 @@ def markov_generate_sentences(dict_words: dict[tuple : list[str]],dict_sentences
 def read_file(path: str) -> dict[int:str]:
     try:
         with open(rf"{path}", "r") as file:
+        #Generating a dictionary with the phrases and their number
             lines ={ i:line for i,line in enumerate(file.readlines())}
             return lines
     except:
