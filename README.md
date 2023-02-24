@@ -82,7 +82,7 @@ def create_dict(file:dict[int:str],generated_state:tuple)-> tuple[dict,dict]:
             state = generated_state
     return dict_words      # Returns dictionary of states 
 ```
-### And finally to read a file and return a list of phrases
+### And finally to read a file and return a dictionary of phrases
 ```python
 def read_file(path: str) -> dict[int:str]:
     try:
