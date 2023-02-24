@@ -60,7 +60,7 @@ def enter_values_into_dict(state: tuple, word: str, dict_words: dict[tuple : lis
     dict_words.setdefault(state,[]).append(word)
     return dict_words
 
-def remove_signs(file : dict[int:str])->dict[str:int]:
+def remove_signs(file : dict[int:str])->dict[int:str]:
     for line in file.keys() :
         file [line]=file[line].translate(str.maketrans('','',string.punctuation)).lower().strip()
     return file
