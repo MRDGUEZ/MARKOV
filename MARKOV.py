@@ -34,7 +34,7 @@ def read_file(path: str) -> dict[int:str]:
         print("Upps!!, There has been a problem")
 
 
-def remove_signs(file : dict[int:str])->dict[str:int]:
+def remove_signs(file : dict[int:str])->dict[int:str]:
     for line in file.keys() :
         file [line]=file[line].translate(str.maketrans('','',string.punctuation)).lower().strip()
     return file
